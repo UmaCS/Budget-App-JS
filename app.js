@@ -35,7 +35,6 @@ const budgetController = (function() {
 				ID = 0
 			}
 
-
 			if (type === 'exp') {
 				newItem = new Expense(ID, des, val)
 			} else {
@@ -43,6 +42,18 @@ const budgetController = (function() {
 			}
 			data.allItems[type].push(newItem);
 			return newItem;
+		},
+
+		deleteItem: function(type, id) {
+			// let ids, index;
+			// ids = data.allItems[type].map(item => item.id);
+			// index = ids.indexOf(id);
+			// if (index !== -1) {
+			// 	data.allItems[type].splice(index, 1);
+			// }
+			// let ids;
+			// ids = data.allItems[type]
+			console.log(data.allItems);
 		},
 
 		calculateBudget: function() {
@@ -72,8 +83,6 @@ const budgetController = (function() {
 		testing: function() {
 			console.log(data);
 		}
-
-
 	}
 
 })();
@@ -90,7 +99,8 @@ const uiController = (function() {
 		budgetLabel: '.budget__value',
 		incomeLabel: '.budget__income--value',
 		expensesLabel: '.budget__expenses--value',
-		percentageLabel: '.budget__expenses--percentage'
+		percentageLabel: '.budget__expenses--percentage',
+		container: '.container'
 	}
 
 	return {
@@ -161,6 +171,8 @@ const controller = (function(budgetCtrl, UICtrl) {
 		document.addEventListener('keypress', e => {
 			if (e.keyCode === 13 || e.which === 13) ctrlAddItem();
 		});
+
+		document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
 	}
 
 	const updateBudget = function() {
@@ -174,7 +186,6 @@ const controller = (function(budgetCtrl, UICtrl) {
 
 	const ctrlAddItem = function() {
 		let input, newItem;
-
 		//1.Get the field input data
 		input = UICtrl.getInput()
 
@@ -190,6 +201,23 @@ const controller = (function(budgetCtrl, UICtrl) {
 
 			//5.Calculate and update budget
 			updateBudget();
+		}
+
+	};
+
+	const ctrlDeleteItem = function(event) {
+		let itemID, splitID, type, ID;
+		itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+		if (itemID) {
+			splitID = itemID.split('-');
+			type = splitID[0];
+			ID = parseInt(splitID[1]);
+
+			// 1. Delete the item from the data structure
+			budgetCtrl.deleteItem(type, ID);
+			//2. Delete the item from the UI
+
+			// 3. Update and show the new budget
 		}
 
 	}
